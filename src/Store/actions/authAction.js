@@ -73,7 +73,7 @@ export function current_User(currentUser) {
                 )
             }
         })
-       
+
 
 
         // Request
@@ -108,11 +108,11 @@ export function current_User(currentUser) {
 
 //messages
 
-// current User
+// current User messaeg
 export function User_Messages(userCurrent) {
     return dispatch => {
         // console.log(userCurrent,'dedux')
-       
+
         var arr = [];
         var flag
         var chatMessages = []
@@ -131,26 +131,48 @@ export function User_Messages(userCurrent) {
             }
             dispatch(
                 { type: actionTypes.FLAG, payload: flag }
-                )
-                
-                
-            })
-            console.log(chatMessages,'dheklo')
-      
-    }}
+            )
 
-// export function User_New_Messages(data) {
+
+        })
+        console.log(chatMessages, 'dheklo')
+
+    }
+}
+
+export function Log_Out() {
+    return dispatch => {
+        firebase.auth().signOut().then(() => {
+
+            dispatch(
+                { type: actionTypes.USER, payload: null }
+            )
+            dispatch(
+                { type: actionTypes.ALLUSER, payload: null }
+            )
+            dispatch(
+                { type: actionTypes.SENDREQUEST, payload: null }
+            )
+            dispatch(
+                { type: actionTypes.RECEIVEREQUEST, payload: null }
+            )
+            dispatch(
+                { type: actionTypes.CHAT, payload: null }
+            )
+            dispatch(
+                { type: actionTypes.FLAG, payload: null }
+            )
+            dispatch(
+                { type: actionTypes.NEWCHAT, payload: null }
+            )
+        })
+    }
+}
+
+                                // }}
+                                // export function Delet_Messages() {
 //     return dispatch => {
-        
-//             dispatch(
-//                 { type: actionTypes.NEWCHAT, payload: data }
-//             )
 
-
-// }}
-// export function Delet_Messages() {
-//     return dispatch => {
-        
 //             dispatch(
 //                 { type: actionTypes.DeletChat, payload: null }
 //             )

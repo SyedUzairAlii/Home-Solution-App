@@ -12,7 +12,7 @@ class OfferGiven extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            text:null
+            text: null
         };
     }
 
@@ -41,49 +41,104 @@ class OfferGiven extends React.Component {
 
 
     componentDidMount() {
-        const { user,navigation } = this.props;
-        const person = navigation.getParam('i')
+        const { user, navigation } = this.props;
+        const person = navigation.getParam('person')
+        console.log(person, 'person')
         this.setState({
-            currentUser:user,
+            person,
+            currentUser: user,
             name: user.name,
             uid: user.UID,
         })
+        //status
+        const personUID = person.uid;
+        const UID = user.UID
+        firebase.database().ref('/Request/' + personUID).on('child_changed', (snapShot) => {
+            if (snapShot.val().data.UID === UID) {
+                console.log(snapShot.val(), '=====///>>')
+                if (snapShot.val().status === 'Accept') {
+                    this.setState({oferDay:snapShot.val().WorkingDay,offerStatus:snapShot.val().status,offerRate:snapShot.val().rate,firstOffer:true })
+
+                    console.log('accepteed')
+                } else if (snapShot.val().status === 'pending') {
+                    this.setState({oferDay:snapShot.val().WorkingDay,offerStatus:snapShot.val().status,offerRate:snapShot.val().rate,firstOffer:true })
+                    // this.setState({  })
+                    console.log('pending')
+
+                }
+            }
+           
+
+        })
+        firebase.database().ref('/Request/' + personUID).on('child_added', (snapShot) => {
+            if (snapShot.val().data.UID === UID) {
+                console.log(snapShot.val(), '=====///>>')
+                if (snapShot.val().status === 'Accept') {
+                    this.setState({oferDay:snapShot.val().WorkingDay,offerStatus:snapShot.val().status,offerRate:snapShot.val().rate,firstOffer:true })
+                    console.log('accepteed')
+                } else if (snapShot.val().status === 'pending') {
+                    this.setState({oferDay:snapShot.val().WorkingDay,offerStatus:snapShot.val().status,offerRate:snapShot.val().rate,firstOffer:true })
+                    console.log('pending')
+
+                }
+            }
+            
+        })
+            
     }
     submit = () => {
         // const{ experience,category , uid} = this.state
-        const { person, currentUser,text } = this.state
-        if(text == null){
-          alert('Please Set Amount')
-        }else if(!experience){
-          alert('please tell your Visitng day ')
-        }else{
+        const { person, currentUser, text ,day} = this.state
+        if (text == null) {
+            alert('Please Set Amount')
+        } else if (!day) {
+            alert('please tell your Visitng day ')
+        } else {
+
+            const { person, currentUser, text, day } = this.state
             // console.log(person,'pesaon')
             const personUID = person.uid;
             const me = currentUser
+            const rate = text
+            const weekDay = day
             const obj = {
-                status: 'Pending',
+                status: 'pending',
                 data: me,
+                rate: rate,
+                WorkingDay: weekDay,
                 sellerUid: personUID,
             }
             firebase.database().ref('/Request/' + personUID).push(obj).then(() => {
-               
+                this.setState({
+                    Status: true,
+
+                })
             })
-         
-          const resetAction = StackActions.reset({
-            index: 0,
-            actions: [
-                NavigationActions.navigate({ routeName: 'Home' }),
-            ]
-        })
-        this.props.navigation.dispatch(resetAction)
         }
-      }
+    }
 
     render() {
-       
-      
+        let number = [{
+            value: 'Monday',
+        }, {
+            value: 'Tuesday',
+        },
+        {
+            value: 'Wedsnessday',
+        }, {
+            value: 'Thursday',
+        }, {
+            value: 'Friday',
+        }, {
+            value: 'Saturday',
+        },
+        {
+            value: 'Sunday',
+        }
+        ];
 
-        const { allUser, list, category, experience,text, } = this.state
+
+        const { allUser, list, category, experience, text,status,firstOffer} = this.state
         return (
             <ImageBackground source={www} style={{ width: '100%', height: '100%' }}>
                 <View style={{
@@ -97,18 +152,19 @@ class OfferGiven extends React.Component {
                     <View style={{ width: 220, height: 50, marginBottom: 30, marginTop: 30 }} >
                         <Text style={{ paddingTop: 10, fontSize: 20, fontWeight: "bold", color: '#ccff33' }}>Cost</Text>
                         <TextInput
-                                // style={{
-                                //   width:'100%'
-                                // }}
-                                keyboardType='numeric'
-                                maxLength={6}
-                                // multiline={true}
-                                placeholder={'0 PKR '}
-                                // inputAccessoryViewID={inputAccessoryViewID}
-                                onChangeText={text => this.setState({ text })}
-                                value={this.state.text + ' PKR'}
-                            />
-                        
+                            // style={{
+                            //   width:'100%'
+                            // }}
+                            // backgroundColor='white'
+                            keyboardType='numeric'
+                            maxLength={6}
+                            // multiline={true}
+                            placeholder={'0 pkr'}
+                            // inputAccessoryViewID={inputAccessoryViewID}
+                            onChangeText={text => this.setState({ text })}
+                            value={this.state.text}
+                        />
+
                     </View>
                     <View style={{ width: 220, height: 50, marginBottom: 50, marginTop: 30 }} >
 
@@ -126,13 +182,13 @@ class OfferGiven extends React.Component {
                             textColor={'#ffff99'}
                             itemColor={'#00e6e6'}
                             selectedItemColor={'#ff00aa'}
-                            onChangeText={e => this.setState({ experience: e })}
+                            onChangeText={e => this.setState({ day: e })}
                         />
 
 
                     </View>
                     <View style={{ width: 220, height: 50, marginTop: 20 }} >
-
+{!firstOffer ?
                         <Button
                             linearGradientProps={{
                                 colors: ['#4da6ff', '#80ff80'],
@@ -143,9 +199,31 @@ class OfferGiven extends React.Component {
 
                             large
                             title='Submit' />
+                            :     <Button
+                            linearGradientProps={{
+                                colors: ['#4da6ff', '#80ff80'],
+                                start: { x: 0, y: 0.5 },
+                                end: { x: 1, y: 0.5 },
+                            }}
+                            onPress={this.submit}
+
+                            large
+                            title='Update Offer' />}
 
                     </View>
+                    <View style={{ width: 220, height: 50, marginBottom: 30, marginTop: 30 }} >
+                   
+                   {
+                       firstOffer && 
+                       <View>
+                            <Text style={{ fontSize: 25, fontWeight: "bold", color: '#f2f2f2' }}></Text>
 
+                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Rate</Text> Pkr</Text>
+                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Week-Day: </Text>pk</Text>
+
+                       </View> 
+                    } 
+                   </View>
 
                 </View>
             </ImageBackground>

@@ -5,6 +5,8 @@ import firebase from '../config/Firebase';
 import { StackActions, NavigationActions } from 'react-navigation';
 // import Expo from 'expo';
 import * as Expo from 'expo';
+import { Input, Header, Divider } from 'react-native-elements';
+import { SocialIcon } from 'react-native-elements'
 import { Constants } from 'expo';
 import { current_User } from '../Store/actions/authAction'
 import { connect } from 'react-redux';
@@ -23,7 +25,7 @@ class LogIn extends React.Component {
         firebase.auth().onAuthStateChanged((user) => {
             if (user != null) {
                 // console.log(user);
-                const userCurrent= user
+                const userCurrent = user
                 this.props.message(userCurrent)
                 const currentUser = user
                 this.props.user(currentUser)
@@ -85,6 +87,10 @@ class LogIn extends React.Component {
                 this.props.navigation.dispatch(resetAction)
             }
         }
+    }
+    map = () => {
+        // this.props.navigation.navigate('Menu')
+        this.props.navigation.openDrawer();
     }
 
     async   Goolge() {
@@ -205,31 +211,53 @@ class LogIn extends React.Component {
 
 
         return (
-            
-            <View>
 
-                    <View style={styles.statusBar} />
-                    <View >
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Header
 
-                        {/* <ScrollView style={styles.body} keyboardDismissMode="interactive"> */}
-                            <Text style={styles.Heading}>Log In</Text>
+                    containerStyle={{
+                        backgroundColor: '#075e54',
+                        justifyContent: 'space-around',
 
+                    }}
+                    leftComponent={{ icon: 'menu', color: '#fff', onPress: () => this.map() }}
+                    centerComponent={{ text: "Home Solution", style: { color: '#fff', fontSize: 20 } }}
 
+                />
+                {/* <View style={styles.statusBar} /> */}
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
 
-                            <TouchableOpacity style={styles.buton} onPress={() => this.logInFB()}>
-                           
-                                <Text style={styles.ButtonText} >Facebook LogIn</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.google} onPress={() => this._loginWithGoogle()}>
-                                
-                                <Text style={styles.ButtonText} >Login google</Text>
-                            </TouchableOpacity>
+                    {/* <ScrollView style={styles.body} keyboardDismissMode="interactive"> */}
 
 
-                        {/* </ScrollView> */}
 
-                    </View>
+                    <TouchableOpacity onPress={() => this.logInFB()}>
+                        <View style={{ width: 300, margin: 20 }}>
+
+                            <SocialIcon
+                                title='Sign In With Facebook'
+                                button
+                                type='facebook'
+                            />
+                        </View>
+                        {/* <Text style={styles.ButtonText} >Facebook LogIn</Text> */}
+                    </TouchableOpacity>
+                    <TouchableOpacity  onPress={() => this._loginWithGoogle()}>
+                        <View style={{ width: 300, margin: 20 }}>
+
+                            <SocialIcon
+                                title='Sign In With Google'
+                                button
+                                type='google-plus-official'
+                            />
+                        </View>
+                    </TouchableOpacity>
+
+
+                    {/* </ScrollView> */}
+
                 </View>
+            </View>
         );
     }
 }
@@ -269,17 +297,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#0055ff',
         paddingVertical: 10,
         marginBottom: 20,
-        width:220,
+        width: 220,
         // justifyContent: 'space-between',
 
 
     },
     google: {
         alignItems: 'center',
-        backgroundColor: '#ff0000',
+        backgroundColor: '#00b3b3',
         paddingVertical: 10,
         marginBottom: 20,
-        width:220,
+        width: 220,
         // justifyContent: 'space-between',
 
 

@@ -56,12 +56,12 @@ class Home extends React.Component {
             person,
             data: true
         })
-        setTimeout(()=>{
+        setTimeout(() => {
             this.setState({
-                
+
                 loading: true
             })
-        },1000)
+        }, 1000)
         // const { user, allUser } = this.props;
         // console.log("phone user props", user)
         this.setState({
@@ -69,41 +69,44 @@ class Home extends React.Component {
 
         })
         console.log(user, 'userprops')
+
         const personUID = person.uid;
+        console.log(personUID, 'userprops')
+
         const UID = user.UID
-        firebase.database().ref('/Request/' + personUID).on('child_changed', (snapShot) => {
-            if (snapShot.val().data.UID === UID) {
+        firebase.database().ref('/Request/' + UID).on('child_changed', (snapShot) => {
+            if (snapShot.val().data.UID === 'personUID') {
                 console.log(snapShot.val(), '=====///>>')
                 if (snapShot.val().status === 'Accept') {
-                    this.setState({ Accept: true, Panding: false, ok: true,loading:true})
+                    this.setState({ Accept: true, Panding: false, ok: true, loading: true })
                     console.log('accepteed')
-                } else if (snapShot.val().status === 'Pending') {
-                    this.setState({ Panding: true, request: true,loading:true })
+                } else if (snapShot.val().status === 'pending') {
+                    this.setState({ Panding: true, request: true, loading: true })
                     console.log('pending')
 
                 }
             }
-           
+
 
         })
-      
 
-        
-        firebase.database().ref('/Request/' + personUID).on('child_added', (snapShot) => {
-            if (snapShot.val().data.UID === UID) {
+
+
+        firebase.database().ref('/Request/' + UID).on('child_added', (snapShot) => {
+            if (snapShot.val().data.UID === personUID) {
                 console.log(snapShot.val(), '=====///>>')
                 if (snapShot.val().status === 'Accept') {
-                    this.setState({ Accept: true, Panding: false, ok: true,request: true, })
+                    this.setState({ Accept: true, Panding: false, ok: true, request: true, })
                     console.log('accepteed')
-                } else if (snapShot.val().status === 'Pending') {
+                } else if (snapShot.val().status === 'pending') {
                     this.setState({ Panding: true, request: true, })
                     console.log('pending')
 
                 }
             }
-            
+
         })
-               
+
 
     }
 
@@ -111,36 +114,32 @@ class Home extends React.Component {
 
     }
 
-    request = () => {
+    Offer = () => {
         const { person, currentUser } = this.state
         // console.log(person,'pesaon')
         const personUID = person.uid;
         const me = currentUser
-        const obj = {
-            status: 'Pending',
-            data: me,
-            sellerUid: personUID,
-        }
-        firebase.database().ref('/Request/' + personUID).push(obj).then(() => {
-            this.setState({
-                request: true,
+        this.props.navigation.navigate('ViewOffer', { person })
 
-            })
-        })
 
     }
-    chat = () =>{
-        const{person} = this.state
+    chat = () => {
+        const { person } = this.state
         const receverDetails = person
-        this.props.navigation.navigate('Chat',{receverDetails} )
+        this.props.navigation.navigate('Chat', { receverDetails })
+    }
+
+    direction(userLocation){
+        this.props.navigation.navigate('map' , {userLocation})
+
     }
     render() {
-        const { person, data, Year, request,ok ,loading } = this.state
+        const { person, data, Year, request, ok, loading } = this.state
         // console.log(person, 'ssss')
         return (
             <ImageBackground source={www} style={{ width: '100%', height: '100%' }}>
-               {!loading?<ActivityIndicator size="large" color="#0000ff" />
-               :
+                {!loading ? <ActivityIndicator size="large" color="#0000ff" />
+                    :
 
 
 
@@ -169,21 +168,21 @@ class Home extends React.Component {
                                 />
                             </View>
                             <Text style={{ fontSize: 25, fontWeight: "bold", color: '#f2f2f2', paddingLeft: 20 }}> {person.name}</Text>
-                            <View style={{ paddingTop: 5, width: 200,paddingLeft:22 }}>
+                            <View style={{ paddingTop: 5, width: 200, paddingLeft: 22 }}>
                                 {!request ?
 
-<Text style={{ fontSize: 20, fontWeight: "bold", color: '#f2f2f2' }}>No Offer Yet!</Text>
-:
-<Button
-    linearGradientProps={{
-        colors: ['#4c669f', '#3b5998', '#192f6a'],
-        start: { x: 0, y: 0.5 },
-        end: { x: 1, y: 0.5 },
-    }}
-    onPress={this.request}
+                                    <Text style={{ fontSize: 20, fontWeight: "bold", color: '#f2f2f2' }}>No Offer Yet!</Text>
+                                    :
+                                    <Button
+                                        linearGradientProps={{
+                                            colors: ['#4c669f', '#3b5998', '#192f6a'],
+                                            start: { x: 0, y: 0.5 },
+                                            end: { x: 1, y: 0.5 },
+                                        }}
+                                        onPress={this.Offer}
 
-    // large
-    title='View Offer' />
+                                        // large
+                                        title='View Offer' />
 
 
 
@@ -200,7 +199,7 @@ class Home extends React.Component {
                             <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Rating: </Text>Not Rated</Text>
                             <Text style={{ fontSize: 19, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Number: </Text>{person.number}</Text>
 
-                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Experience: </Text>{person.experience+' Year'}</Text>
+                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Experience: </Text>{person.experience + ' Year'}</Text>
 
                             <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Location: </Text>Karachi,Pakistan</Text>
                         </View>
@@ -209,11 +208,11 @@ class Home extends React.Component {
 
                     </View>
                 }{
-                     loading&&
-                    <View style={{ marginTop: 70, paddingLeft: 5, paddingTop: 30,flexDirection:'row',paddingBottom:10,paddingRight:5}}>
-                      
+                    loading &&
+                    <View style={{ marginTop: 70, paddingLeft: 5, paddingTop: 30, flexDirection: 'row', paddingBottom: 10, paddingRight: 5 }}>
 
-                      <View style={{width:'50%',paddingRight:2}}>
+
+                        <View style={{ width: '50%', paddingRight: 2 }}>
                             <Button
                                 linearGradientProps={{
                                     colors: ['#4c669f', '#3b5998', '#192f6a'],
@@ -224,25 +223,25 @@ class Home extends React.Component {
 
                                 // large
                                 title='Contact' />
-                        </View>{ok&&
-                        
-                        <View style={{width:'50%',paddingLeft:2}}>
-                            <Button
-                                linearGradientProps={{
-                                    colors: ['#4c669f', '#3b5998', '#192f6a'],
-                                    start: { x: 0, y: 0.5 },
-                                    end: { x: 1, y: 0.5 },
-                                }}
-                                // onPress={this.request}
+                        </View>{ok &&
 
-                                // large
-                                title='Get Direction' />
-                        </View>}
-                      
+                            <View style={{ width: '50%', paddingLeft: 2 }}>
+                                <Button
+                                    linearGradientProps={{
+                                        colors: ['#4c669f', '#3b5998', '#192f6a'],
+                                        start: { x: 0, y: 0.5 },
+                                        end: { x: 1, y: 0.5 },
+                                    }}
+                                    onPress={() => this.direction(userLocation=person.Location)}
+
+                                    // large
+                                    title='Get Direction' />
+                            </View>}
+
                     </View>
                 }
-                
-                    
+
+
             </ImageBackground>
         );
     }

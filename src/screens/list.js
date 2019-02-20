@@ -8,6 +8,8 @@ import { DrawerActions } from 'react-navigation';
 import { Constants, Location, Permissions } from 'expo';
 import { red } from 'ansi-colors';
 import www from '../../assets/nn.jpg'
+import { Log_Out } from '../Store/actions/authAction'
+
 class Menu extends React.Component {
     constructor(props) {
         super(props);
@@ -99,7 +101,7 @@ class Menu extends React.Component {
         this.props.navigation.dispatch(resetAction)
     }
     LogOut = () => {
-        firebase.auth().signOut()
+        this.props.logout()
 
         const resetAction = StackActions.reset({
             index: 0,
@@ -233,7 +235,9 @@ function mapStateToProp(state) {
 function mapDispatchToProp(dispatch) {
     return ({
 
-
+        logout: () => {
+            dispatch(Log_Out())
+        },
 
     })
 }

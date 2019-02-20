@@ -73,7 +73,7 @@ class BuyerView extends React.Component {
                 if (snapShot.val().status === 'Accept') {
                     this.setState({ Accept: true, Panding: false, ok: true,loading:true})
                     console.log('accepteed')
-                } else if (snapShot.val().status === 'Pending') {
+                } else if (snapShot.val().status === 'pending') {
                     this.setState({ Panding: true, request: true,loading:true })
                     console.log('pending')
 
@@ -91,7 +91,7 @@ class BuyerView extends React.Component {
                 if (snapShot.val().status === 'Accept') {
                     this.setState({ Accept: true, Panding: false, ok: true,request: true, })
                     console.log('accepteed')
-                } else if (snapShot.val().status === 'Pending') {
+                } else if (snapShot.val().status === 'pending') {
                     this.setState({ Panding: true, request: true, })
                     console.log('pending')
 
@@ -106,25 +106,27 @@ class BuyerView extends React.Component {
     componentWillReceiveProps(props) {
 
     }
+giveOffer = (person) =>{
+    this.props.navigation.navigate('OfferGiven', { person })
+}
+    // giveOffer = (i) => {
+    //     const { person, currentUser } = this.state
+    //     // console.log(person,'pesaon')
+    //     const personUID = person.uid;
+    //     const me = currentUser
+    //     const obj = {
+    //         status: 'Pending',
+    //         data: me,
+    //         sellerUid: personUID,
+    //     }
+    //     firebase.database().ref('/Request/' + personUID).push(obj).then(() => {
+    //         this.setState({
+    //             request: true,
 
-    giveOffer = (i) => {
-        const { person, currentUser } = this.state
-        // console.log(person,'pesaon')
-        const personUID = person.uid;
-        const me = currentUser
-        const obj = {
-            status: 'Pending',
-            data: me,
-            sellerUid: personUID,
-        }
-        firebase.database().ref('/Request/' + personUID).push(obj).then(() => {
-            this.setState({
-                request: true,
+    //         })
+    //     })
 
-            })
-        })
-
-    }
+    // }
     chat = () =>{
         const{person} = this.state
         const receverDetails = person
@@ -167,6 +169,7 @@ class BuyerView extends React.Component {
                             <Text style={{ fontSize: 25, fontWeight: "bold", color: '#f2f2f2', paddingLeft: 20 }}> {person.name}</Text>
                             <View style={{ paddingTop: 5, width: 200,paddingLeft:22 }}>
                                 {!request ?
+                                
 
 <Button
     linearGradientProps={{
@@ -174,13 +177,21 @@ class BuyerView extends React.Component {
         start: { x: 0, y: 0.5 },
         end: { x: 1, y: 0.5 },
     }}
-    onPress={() => this.giveOffer(i)}
+    onPress={() => this.giveOffer(person)}
     
     // large
     title='offer' />
     :
-    <Text style={{ fontSize: 20, fontWeight: "bold", color: '#f2f2f2' }}>Offer Sent</Text>
-
+    <Button
+    linearGradientProps={{
+        colors: ['#4c669f', '#3b5998', '#192f6a'],
+        start: { x: 0, y: 0.5 },
+        end: { x: 1, y: 0.5 },
+    }}
+    onPress={() => this.giveOffer(person)}
+    
+    // large
+    title='Update Offer' />
 
 
                                 }

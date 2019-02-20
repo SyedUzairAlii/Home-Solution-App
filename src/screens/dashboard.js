@@ -8,6 +8,7 @@ import { DrawerActions } from 'react-navigation';
 import { Constants, Location, Permissions, Contacts } from 'expo';
 import { LinearGradient } from 'expo';
 import { User_Messages } from '../Store/actions/authAction'
+import geolib from 'geolib'
 class Home extends React.Component {
     constructor(props) {
         super(props);
@@ -17,8 +18,13 @@ class Home extends React.Component {
     }
     componentWillMount() {
 
-        const { user, allUser } = this.props;
-        
+        const { user, allUser, me } = this.props;
+        if (me) {
+            setTimeout(() => {
+                console.log("me", me)
+
+            }, 100)
+        }
         console.log("phone user props", user)
         this.setState({
             name: user.name,
@@ -29,9 +35,14 @@ class Home extends React.Component {
 
     componentDidMount() {
 
-        const { user, allUser } = this.props;
-        
-        console.log("phone user props", user)
+        const { user, allUser, me } = this.props;
+
+        if (me) {
+            setTimeout(() => {
+                console.log("me", me)
+
+            }, 100)
+        }
         this.setState({
             name: user.name,
             uid: user.UID,
@@ -42,29 +53,47 @@ class Home extends React.Component {
         if (allUser) {
             // console.log(allUser,'ssssdddffgg')
             setTimeout(() => {
+                console.log("phone user props", user)
                 allUser.map((i) => {
                     if (i.category) {
-                        const obj = {
-                            name: i.name,
-                            number: i.number,
-                            uid: i.UID,
-                            photo: i.photo,
-                            category: i.category,
-                            experience: i.experience,
-                            image: i.image
-                        }
-                        services.push(obj)
+                        console.log(i.Location, me.Location, 'll')
+                        this.getDistance(i.Location, me.Location).then((res) => {
+                            // console.log(res, 'respos===>>');
+                            if (res < 10000) {
+
+                                const obj = {
+                                    name: i.name,
+                                    number: i.number,
+                                    uid: i.UID,
+                                    photo: i.photo,
+                                    category: i.category,
+                                    experience: i.experience,
+                                    image: i.image,
+                                    Location: i.Location
+
+                                }
+                                services.push(obj)
+                            }
+                            this.setState({ services: services, loading: true })
+                        })
                     }
                 });
-                this.setState({ services: services, loading: true })
                 // console.log('>>>>>>>>>>sellers> did wala', services)
             }, 100)
         }
 
 
 
-       
+
         this.getContacts()
+    }
+    async getDistance(users, userData) {
+        const direction = await geolib.getDistanceSimple(
+            users,
+            userData
+        )
+
+        return direction
     }
 
     map = () => {
@@ -72,6 +101,7 @@ class Home extends React.Component {
         this.props.navigation.openDrawer();
     }
     viewSeller = (i) => {
+        console.log(i, "ii")
         this.props.navigation.navigate('View', { i })
 
     }
@@ -150,8 +180,13 @@ class Home extends React.Component {
 
     };
     componentWillReceiveProps(props) {
-        const { user, allUser } = props;
-        console.log("phone user props", user)
+        const { user, allUser, me } = props;
+        if (me) {
+            setTimeout(() => {
+                console.log("me", me)
+
+            }, 100)
+        }
         this.setState({
             name: user.name,
             uid: user.UID,
@@ -161,21 +196,28 @@ class Home extends React.Component {
 
         if (allUser) {
             setTimeout(() => {
+                console.log("phone user props", user)
                 allUser.map((i) => {
                     if (i.category) {
-                        const obj = {
-                            name: i.name,
-                            number: i.number,
-                            uid: i.UID,
-                            photo: i.photo,
-                            category: i.category,
-                            experience: i.experience,
-                            image: i.image
-                        }
-                        services.push(obj)
+                        this.getDistance(i.Location, me.Location).then((res) => {
+                            // console.log(res, 'respos===>>');
+                            if (res < 10000) {
+                                const obj = {
+                                    name: i.name,
+                                    number: i.number,
+                                    uid: i.UID,
+                                    photo: i.photo,
+                                    category: i.category,
+                                    experience: i.experience,
+                                    image: i.image,
+                                    Location: i.Location
+                                }
+                                services.push(obj)
+                            }
+                            this.setState({ services: services, loading: true })
+                        })
                     }
                 });
-                this.setState({ services: services, loading: true })
                 // console.log('>>>>>>>>>>sellers>will wala ', services)
             }, 100)
         }
@@ -211,28 +253,28 @@ class Home extends React.Component {
                                         // console.log(i, "><><><<>")
                                         return (
                                             <View key={i.category} style={{ flexDirection: "row" }} >
-                                                    <LinearGradient
-                                                        colors={['#25d366', 'transparent']}
-                                                        style={{
-                                                            position: 'absolute',
-                                                            left: 0,
-                                                            right: 0,
-                                                            top: 0,
-                                                            height: 300,
-                                                        }}
-                                                    />
-                                                <View style={{ height: 250, width: 160, borderWidth:2, flex: 1, margin: 10, borderRadius:10,borderColor:'#34b7f1' }}>
-                                                    <View style={{borderRadius:10 , overflow:'hidden',height:150,}}>
+                                                <LinearGradient
+                                                    colors={['#25d366', 'transparent']}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        left: 0,
+                                                        right: 0,
+                                                        top: 0,
+                                                        height: 300,
+                                                    }}
+                                                />
+                                                <View style={{ height: 250, width: 160, borderWidth: 2, flex: 1, margin: 10, borderRadius: 10, borderColor: '#34b7f1' }}>
+                                                    <View style={{ borderRadius: 10, overflow: 'hidden', height: 150, }}>
                                                         <Image style={styles.img} source={{ uri: i.photo }} />
                                                     </View>
                                                     <TouchableOpacity onPress={() => this.viewSeller(i)}>
-                                                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                                        <Text style={styles.cardTitle}>{i.category}</Text>
-                                                    </View>
-                                                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                                        <Text style={styles.titleName}>{i.name}</Text>
-                                                    </View>
-                                                </TouchableOpacity>
+                                                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                                            <Text style={styles.cardTitle}>{i.category}</Text>
+                                                        </View>
+                                                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                                            <Text style={styles.titleName}>{i.name}</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
                                                     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                                         {/* <Text onPress={() => this.viewSeller(i)} style={{ fontSize: 16, color: '#3498db', paddingBottom: 8, paddingTop: 3 }}>VIEW NOW</Text> */}
                                                     </View>
@@ -282,7 +324,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProp(state) {
     return ({
-        user: state.authReducers.USER,
+        me: state.authReducers.USER,
         allUser: state.authReducers.ALLUSER
     })
 }

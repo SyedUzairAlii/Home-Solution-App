@@ -221,18 +221,18 @@ class Chat extends React.Component {
                 <ScrollView>
                             <View style={{ flexDirection:'column',justifyContent:'center',marginTop:50,justifyContent:'space-between',flexGrow:1}}>
                     {
-                        chatMesg && chatMesg.map((i)=>{
+                        chatMesg && chatMesg.map((i,index)=>{
                             console.log(i,"map")
                             if(i.senderUid === currentUser.UID ){
                                 return(
-                                    <View key={i.uid}style={{backgroundColor:'#E3FDCB',width:200, marginLeft:110 ,borderRadius:20 ,justifyContent:'center',marginBottom:5,marginTop:5,justifyContent:'flex-end'}}>
+                                    <View key={index}style={{backgroundColor:'#E3FDCB',width:200, marginLeft:110 ,borderRadius:20 ,justifyContent:'center',marginBottom:5,marginTop:5,justifyContent:'flex-end'}}>
                                         <Text style={{justifyContent:'center',padding:10}}>{i.message}</Text>
                                     </View>
                                 )
                             }else if(i.senderUid === person.uid){
                                 return(
 
-                                <View key={i.uid}style={{backgroundColor:'white',width:200, borderRadius:20,paddingLeft:10,justifyContent:'center',marginBottom:5,marginTop:5,justifyContent:'flex-start'}}>
+                                <View key={index}style={{backgroundColor:'white',width:200, borderRadius:20,paddingLeft:10,justifyContent:'center',marginBottom:5,marginTop:5,justifyContent:'flex-start'}}>
                                 <Text>{i.message}</Text>
                             </View>
                                 )

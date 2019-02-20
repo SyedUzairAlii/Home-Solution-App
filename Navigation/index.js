@@ -10,6 +10,8 @@ import Chat from '../src/screens/Inbox'
 import Content from '../src/screens/list'
 import Notification from '../src/screens/notification'
 import BuyerView from '../src/screens/buyer'
+import OfferGiven from '../src/screens/OfferGiven'
+import ViewOffer from '../src/screens/ViewOffer'
 const StackNavigator = createStackNavigator({
     LogIn: {
         screen: LogIn
@@ -43,6 +45,12 @@ const StackNavigator = createStackNavigator({
     },
     BuyerView:{
         screen:BuyerView
+    },
+    OfferGiven:{
+        screen:OfferGiven
+    },
+    ViewOffer:{
+        screen:ViewOffer
     }
 },
     {
@@ -52,28 +60,7 @@ const StackNavigator = createStackNavigator({
     });
 
 
-// StackNavigator.navigationOptions = ({ navigation }) => {
-//     let drawerLockMode ;
-//     let activeRoute = navigation.state.routes[navigation.state.index];
-//     if (activeRoute.routes && activeRoute.index > 0) {
-//       drawerLockMode = 'locked-closed';
-//     }
 
-//     console.log('drawerLockMode', drawerLockMode);
-
-//     return {
-//       drawerLockMode,
-//     };
-//   };
-// StackNavigator.navigationOptions = ({ navigation }) => {
-//         let drawerLockMode = 'unlocked';
-//         if (navigation.state.index >= 0) {
-//           drawerLockMode = 'locked-closed';
-//         }
-
-//         return {
-//           drawerLockMode,
-//         };}
 const Drawer = createDrawerNavigator(
     {
 
