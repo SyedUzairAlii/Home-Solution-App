@@ -22,7 +22,7 @@ class Home extends React.Component {
 
     static navigationOptions = {
         //  drawerLockMode: 'locked-closed',
-        title: 'Notification',
+        title: 'Inbox',
 
         headerStyle: {
             backgroundColor: '#075e54',
@@ -33,14 +33,33 @@ class Home extends React.Component {
         },
     };
     componentDidMount() {
+
+
         const { receviRequest, user } = this.props;
+
+        let currentUser = user
+        var inbox = []
+        // console.log(currentUser,'user')
+        if (user) {
+            firebase.database().ref('/Messages/').on('child_added', snapShot => {
+                const Messages = snapShot.val();
+                if (Messages.id == 1) {
+                    if (Messages.reciver.uid === currentUser.UID || Messages.sender.UID === currentUser.UID)
+                        inbox.push(Messages)
+                }
+            })
+            this.setState({
+                inboxUser: inbox,
+                currentUser: user
+            })
+        }
         if (receviRequest) {
             var receviRequests = receviRequest
             this.setState({
                 receviRequests,
                 loading: true
             })
-            console.log("receviRequest>>", receviRequest)
+            // console.log("receviRequest>>", receviRequest)
         }
         // this.setState({
         //     person,
@@ -96,6 +115,14 @@ class Home extends React.Component {
 
 
     }
+    viewSeller = (i) => {
+        this.props.navigation.navigate('View', { i })
+
+    }
+    viewBuyer = (i) => {
+        this.props.navigation.navigate('BuyerView', { i })
+
+    }
 
     componentWillReceiveProps(props) {
 
@@ -125,11 +152,11 @@ class Home extends React.Component {
         this.props.navigation.navigate('Chat', { receverDetails })
     }
     render() {
-        const { data, Year, request, ok, loading, receviRequests } = this.state
+        const { ok, currentUser, loading, inboxUser } = this.state
         // console.log(person, 'ssss')
         return (
             <ImageBackground source={www} style={{ width: '100%', height: '100%' }}>
-                {!loading ?
+                {!inboxUser ?
                     <View style={{
                         flex: 1,
                         flexDirection: 'column',
@@ -150,84 +177,91 @@ class Home extends React.Component {
                         // justifyContent: 'center',
                         // alignItems: "center"
                     }}>
-                        <Text style={{ fontSize: 19, fontWeight: "bold", color: '#f2f2f2', paddingLeft: 20 }}> Notification Recived </Text>
-                        {receviRequests.map((i) => {
-                            return (
-                                <View style={{ width: 350, height: 90, marginTop: 20, justifyContent: 'space-around', }}>
-                                    <View style={{ paddingLeft: 3, paddingTop: 20, marginLeft: 5, flexDirection: 'row' }}>
-                                        <View>
-                                            <Avatar
-                                                size="small"
-                                                rounded
-                                                title="CR"
-                                                onPress={() => this.pickImage}
-                                                activeOpacity={0.7}
-                                                source={{
-                                                    uri: i.data.photo
+                        <ScrollView>
+                            {/* <View style={{ width: 350, height: 90, marginTop: 20, justifyContent: 'space-around', }}> */}
+                            {/* <Text style={{ fontSize: 19, fontWeight: "bold", color: '#f2f2f2', paddingLeft: 20 }}> Notification Recived </Text> */}
+                            {inboxUser.map((a) => {
+                                if (a.senderUid === currentUser.UID) {
+                                    var obj = {
+                                        name: a.reciver.name,
+                                        number: a.reciver.number,
+                                        uid: a.reciver.uid,
+                                        photo: a.reciver.photo,
+                                        category: a.reciver.category,
+                                        experience: a.reciver.experience,
+                                        image: a.reciver.image
+                                    }
+                                    var i = obj
+                                    return (
+                                        <TouchableOpacity onPress={() => this.viewSeller(i)}>
+                                            <View style={{ paddingLeft: 3, paddingTop: 20, marginLeft: 5, flexDirection: 'row' }}>
+                                                <View>
+                                                    <Avatar
+                                                        size="small"
+                                                        rounded
+                                                        title="CR"
+                                                        // onPress={() => this.pickImage}
+                                                        activeOpacity={0.7}
+                                                        source={{
+                                                            uri: i.photo
 
-                                                }}
+                                                        }}
+                                                    />
+                                                </View>
+                                                <View>
+                                                    <Text style={{ fontSize: 16, fontWeight: "bold", color: '#f2f2f2', paddingLeft: 5 }}> {i.name}</Text>
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
 
-                                            />
+                                    )
+                                } else if (a.reciverUid === currentUser.UID) {
+                                    var obj = {
+                                        name: a.sender.name,
+                                        number: a.sender.number,
+                                        uid: a.sender.UID,
+                                        photo: a.sender.photo,
+                                        category: a.sender.category,
+                                        experience: a.sender.experience,
+                                        image: a.sender.image
+                                    }
+                                    var i = obj
+                                    return (
+                                        <View style={{ paddingLeft: 3, paddingTop: 20, marginLeft: 5, flexDirection: 'row' }}>
+                                            <TouchableOpacity onPress={() => this.viewBuyer(i)}>
+
+                                                <View>
+                                                    <Avatar
+                                                        size="small"
+                                                        rounded
+                                                        title="CR"
+                                                        // onPress={() => this.pickImage}
+                                                        activeOpacity={0.7}
+                                                        source={{
+                                                            uri: i.photo
+
+                                                        }}
+
+                                                    />
+                                                </View>
+                                                <View>
+
+                                                    <Text style={{ fontSize: 16, fontWeight: "bold", color: '#f2f2f2', paddingLeft: 5 }}> {i.name}</Text>
+                                                </View>
+                                            </TouchableOpacity>
+
                                         </View>
-                                        <View>
 
-                                            <Text style={{ fontSize: 16, fontWeight: "bold", color: '#f2f2f2', paddingLeft: 5 }}> {i.data.name}</Text>
-                                        </View>
-                                        <View style={{ height: 18, paddingLeft: 5, paddingRight: 5, paddingBottom: 15 }}><Button
-                                            linearGradientProps={{
-                                                colors: ['#4c669f', '#3b5998', '#192f6a'],
-                                                start: { x: 0, y: 0.5 },
-                                                end: { x: 1, y: 0.5 },
-                                            }}
-                                            onPress={this.request}
-
-                                            // large
-                                            title='Accept' /></View>
-                                        <View style={{ height: 18, paddingLeft: 5, paddingRight: 5, paddingBottom: 15 }}><Button
-                                            linearGradientProps={{
-                                                colors: ['#4c669f', '#3b5998', '#192f6a'],
-                                                start: { x: 0, y: 0.5 },
-                                                end: { x: 1, y: 0.5 },
-                                            }}
-                                            onPress={this.request}
-
-                                            // large
-                                            title='Reject' /></View>
+                                    )
+                                }
+                                // </View>
 
 
-                                    </View>
-                                    {/* <View style={{ paddingTop: 5, width: 200 }}>
-                                        {!request ?
-
-                                            <Button
-                                                linearGradientProps={{
-                                                    colors: ['#4c669f', '#3b5998', '#192f6a'],
-                                                    start: { x: 0, y: 0.5 },
-                                                    end: { x: 1, y: 0.5 },
-                                                }}
-                                                onPress={this.request}
-
-                                                // large
-                                                title='Send Request' />
-                                            :
-
-                                            <Text style={{ fontSize: 20, fontWeight: "bold", color: '#f2f2f2' }}>Pending</Text>
+                            })
 
 
-                                        }
-
-                                    </View> */}
-                                </View>
-
-
-
-
-
-                            )
-                        })
-
-
-                        }
+                            }
+                        </ScrollView>
                     </View>
 
 
@@ -298,7 +332,7 @@ function mapStateToProp(state) {
     return ({
         user: state.authReducers.USER,
         allUser: state.authReducers.ALLUSER,
-        receviRequest: state.authReducers.RECEIVEREQUEST
+        // receviRequest: state.authReducers.RECEIVEREQUEST
     })
 }
 function mapDispatchToProp(dispatch) {

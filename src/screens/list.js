@@ -20,12 +20,10 @@ class Menu extends React.Component {
 
     //     let currentUser = user
     //     if(user){
-    //         if(currentUser.category){
-
-    //            this.setState({
-    //                serviceSubmit:true
-    //            })
-    //         }
+    //         firebase.database().ref('/Messages/').on('child_added', snapShot => {
+    //             const Messages = snapShot.val();
+    //             console.log(Messages,"check messages")
+    //         })
     //     } 
     // }
     componentWillReceiveProps(props){
@@ -125,7 +123,7 @@ class Menu extends React.Component {
                 alignItems: "center"
             }}>
                   <View style={{ width: 200, height: 80, borderRadius:40  }} >
-                    {!serviceSubmit ?  
+                   
                     <Button
                         linearGradientProps={{
                             colors: [ '#E7E9BB','#403B4A'],
@@ -137,19 +135,8 @@ class Menu extends React.Component {
                         large
                         icon={{ name: 'plus', type: 'octicon', }}
                         title='Add Service' />
-                        :
-                        <Button
-                        linearGradientProps={{
-                            colors: [ '#E7E9BB','#403B4A'],
-                            start: { x: 0, y: 0.5 },
-                            end: { x: 1, y: 0.5 },
-                        }}
-                    onPress={this.notifiaction}
-
-                        large
-                        icon={{ name: 'plus', type: 'octicon', }}
-                        title='Notification' />
-                        }
+                        
+                        
                 </View>
                 <View style={{ width: 200, height: 80, borderRadius:40   }} >
                     <Button
@@ -171,7 +158,7 @@ class Menu extends React.Component {
                             start: { x: 0, y: 0.5 },
                             end: { x: 1, y: 0.5 },
                         }}
-                    onPress={this.inbox}
+                    onPress={this.notifiaction}
 
                         large
                         icon={{ name: 'inbox', type: 'octicon', }}

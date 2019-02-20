@@ -12,6 +12,7 @@ class OfferGiven extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            text:null
         };
     }
 
@@ -50,11 +51,11 @@ class OfferGiven extends React.Component {
     }
     submit = () => {
         // const{ experience,category , uid} = this.state
-        const { person, currentUser } = this.state
-        if(!category){
-          alert('Please Select a category')
+        const { person, currentUser,text } = this.state
+        if(text == null){
+          alert('Please Set Amount')
         }else if(!experience){
-          alert('please tell your experience ')
+          alert('please tell your Visitng day ')
         }else{
             // console.log(person,'pesaon')
             const personUID = person.uid;
@@ -80,23 +81,9 @@ class OfferGiven extends React.Component {
 
     render() {
        
-        let number = [{
-            value: 'Monday',
-        }, {
-            value: 'Tuesday',
-        },
-        {
-            value: 'Thursday',
-        }, {
-            value: 'Friday',
-        }, {
-            value: 'Saturday',
-        }, {
-            value: 'Sunday',
-        }
-        ];
+      
 
-        const { allUser, list, category, experience } = this.state
+        const { allUser, list, category, experience,text, } = this.state
         return (
             <ImageBackground source={www} style={{ width: '100%', height: '100%' }}>
                 <View style={{

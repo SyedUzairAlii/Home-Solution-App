@@ -200,9 +200,9 @@ class Home extends React.Component {
                             <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Rating: </Text>Not Rated</Text>
                             <Text style={{ fontSize: 19, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Number: </Text>{person.number}</Text>
 
-                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Experience: </Text>{person.experience}</Text>
+                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Experience: </Text>{person.experience+' Year'}</Text>
 
-                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Location: </Text>{person.experience}</Text>
+                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Location: </Text>Karachi,Pakistan</Text>
                         </View>
 
 

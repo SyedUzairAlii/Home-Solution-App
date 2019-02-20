@@ -7,6 +7,7 @@ import { Constants } from 'expo';
 console.disableYellowBox = true;
 
 export default class App extends React.Component {
+
   render() {
     return (
       <Provider store={store}>

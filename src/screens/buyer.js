@@ -48,7 +48,7 @@ class BuyerView extends React.Component {
         const { navigation, user } = this.props;
         
         const person = navigation.getParam('i')
-        // console.log("perams>>",person)
+        console.log("perams>>",person)
         this.setState({
             person,
             data: true
@@ -107,7 +107,7 @@ class BuyerView extends React.Component {
 
     }
 
-    request = () => {
+    giveOffer = (i) => {
         const { person, currentUser } = this.state
         // console.log(person,'pesaon')
         const personUID = person.uid;
@@ -174,7 +174,7 @@ class BuyerView extends React.Component {
         start: { x: 0, y: 0.5 },
         end: { x: 1, y: 0.5 },
     }}
-    onPress={this.request}
+    onPress={() => this.giveOffer(i)}
     
     // large
     title='offer' />
@@ -195,10 +195,7 @@ class BuyerView extends React.Component {
 
                             <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Rating: </Text>Not Rated</Text>
                             <Text style={{ fontSize: 19, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Number: </Text>{person.number}</Text>
-
-                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Experience: </Text>{person.experience}</Text>
-
-                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Location: </Text>{person.experience}</Text>
+                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Location: </Text>Karachi,Pakistan</Text>
                         </View>
 
 
