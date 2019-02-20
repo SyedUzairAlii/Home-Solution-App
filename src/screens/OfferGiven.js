@@ -8,7 +8,7 @@ import { DrawerActions } from 'react-navigation';
 import { Constants, Location, Permissions } from 'expo';
 import www from '../../assets/nn.jpg';
 import { Dropdown } from 'react-native-material-dropdown';
-class Menu extends React.Component {
+class OfferGiven extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,7 +16,7 @@ class Menu extends React.Component {
     }
 
     static navigationOptions = {
-        title: "Add Service's",
+        title: "Give Offer",
 
         // headerLeft: (
         // <Icon
@@ -40,25 +40,34 @@ class Menu extends React.Component {
 
 
     componentDidMount() {
-        const { user ,allUser} = this.props;
-        console.log("Service user props <><><><><><><>", allUser)
+        const { user,navigation } = this.props;
+        const person = navigation.getParam('i')
         this.setState({
+            currentUser:user,
             name: user.name,
             uid: user.UID,
         })
     }
     submit = () => {
-        const{ experience,category , uid} = this.state
+        // const{ experience,category , uid} = this.state
+        const { person, currentUser } = this.state
         if(!category){
           alert('Please Select a category')
         }else if(!experience){
           alert('please tell your experience ')
         }else{
-          const obj = {
-            category : category,
-            experience : experience,
-          }
-          firebase.database().ref('/UserData/'+ uid).update(obj);
+            // console.log(person,'pesaon')
+            const personUID = person.uid;
+            const me = currentUser
+            const obj = {
+                status: 'Pending',
+                data: me,
+                sellerUid: personUID,
+            }
+            firebase.database().ref('/Request/' + personUID).push(obj).then(() => {
+               
+            })
+         
           const resetAction = StackActions.reset({
             index: 0,
             actions: [
@@ -70,38 +79,20 @@ class Menu extends React.Component {
       }
 
     render() {
-        let data = [{
-            value: 'Plumber',
-        }, {
-            value: 'Electricion',
-        },
-        {
-            value: 'Carpainter',
-        }, {
-            value: 'A.c Repair',
-        }, {
-            value: 'Painter',
-        }, {
-            value: 'Car Mechanic',
-        }, {
-            value: 'Fumigation',
-        }, {
-            value: 'Towing van'
-        }
-        ];
+       
         let number = [{
-            value: '1',
+            value: 'Monday',
         }, {
-            value: '2',
+            value: 'Tuesday',
         },
         {
-            value: '3',
+            value: 'Thursday',
         }, {
-            value: '4',
+            value: 'Friday',
         }, {
-            value: '5',
+            value: 'Saturday',
         }, {
-            value: '5+',
+            value: 'Sunday',
         }
         ];
 
@@ -117,22 +108,24 @@ class Menu extends React.Component {
                 }}>
 
                     <View style={{ width: 220, height: 50, marginBottom: 30, marginTop: 30 }} >
-                        <Text style={{ paddingTop: 10, fontSize: 20, fontWeight: "bold", color: '#ccff33' }}>Select Service</Text>
-
-                        <Dropdown
-                            label='Select Service'
-                            data={data}
-                            baseColor={'#ccff33'}
-                            textColor={'#ffff99'}
-                            itemColor={'#00e6e6'}
-                            selectedItemColor={'#ff00aa'}
-                            onChangeText={e => this.setState({ category: e })}
-                        />
-
+                        <Text style={{ paddingTop: 10, fontSize: 20, fontWeight: "bold", color: '#ccff33' }}>Cost</Text>
+                        <TextInput
+                                // style={{
+                                //   width:'100%'
+                                // }}
+                                keyboardType='numeric'
+                                maxLength={6}
+                                // multiline={true}
+                                placeholder={'0 PKR '}
+                                // inputAccessoryViewID={inputAccessoryViewID}
+                                onChangeText={text => this.setState({ text })}
+                                value={this.state.text + ' PKR'}
+                            />
+                        
                     </View>
                     <View style={{ width: 220, height: 50, marginBottom: 50, marginTop: 30 }} >
 
-                        <Text style={{ paddingTop: 10, fontSize: 20, fontWeight: "bold", color: '#80ff80' }}>Field Exprience</Text>
+                        <Text style={{ paddingTop: 10, fontSize: 20, fontWeight: "bold", color: '#80ff80' }}>Service Day</Text>
                         {/* <TextInput
                             style={{ backgroundColor: '#ccff99', paddingBottom: 10, paddingTop: 10, fontSize: 20, fontWeight: "bold", color: '#80ff80' }}
                             keyboardType='numeric'
@@ -201,5 +194,5 @@ function mapDispatchToProp(dispatch) {
     })
 }
 
-export default connect(mapStateToProp, mapDispatchToProp)(Menu);
+export default connect(mapStateToProp, mapDispatchToProp)(OfferGiven);
 

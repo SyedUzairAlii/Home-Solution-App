@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 
-class Home extends React.Component {
+class BuyerView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -46,10 +46,7 @@ class Home extends React.Component {
     };
     componentDidMount() {
         const { navigation, user } = this.props;
-        // if(user){
-        //     const userCurrent= user
-        //     this.props.message(userCurrent)
-        // }
+        
         const person = navigation.getParam('i')
         // console.log("perams>>",person)
         this.setState({
@@ -62,8 +59,7 @@ class Home extends React.Component {
                 loading: true
             })
         },1000)
-        // const { user, allUser } = this.props;
-        // console.log("phone user props", user)
+        // const { user, allUser } = this.pro
         this.setState({
             currentUser: user,
 
@@ -172,8 +168,6 @@ class Home extends React.Component {
                             <View style={{ paddingTop: 5, width: 200,paddingLeft:22 }}>
                                 {!request ?
 
-<Text style={{ fontSize: 20, fontWeight: "bold", color: '#f2f2f2' }}>No Offer Yet!</Text>
-:
 <Button
     linearGradientProps={{
         colors: ['#4c669f', '#3b5998', '#192f6a'],
@@ -181,9 +175,11 @@ class Home extends React.Component {
         end: { x: 1, y: 0.5 },
     }}
     onPress={this.request}
-
+    
     // large
-    title='View Offer' />
+    title='offer' />
+    :
+    <Text style={{ fontSize: 20, fontWeight: "bold", color: '#f2f2f2' }}>Offer Sent</Text>
 
 
 
@@ -288,5 +284,5 @@ function mapDispatchToProp(dispatch) {
     })
 }
 
-export default connect(mapStateToProp, mapDispatchToProp)(Home);
+export default connect(mapStateToProp, mapDispatchToProp)(BuyerView);
 

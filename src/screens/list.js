@@ -12,8 +12,33 @@ class Menu extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            serviceSubmit:false
         };
+    }
+    // componentDidMount(){
+    //     const {user} =this.props
+
+    //     let currentUser = user
+    //     if(user){
+    //         if(currentUser.category){
+
+    //            this.setState({
+    //                serviceSubmit:true
+    //            })
+    //         }
+    //     } 
+    // }
+    componentWillReceiveProps(props){
+        const {user} =props
+        let currentUser = user
+        if(user){
+            if(currentUser.category){
+
+               this.setState({
+                   serviceSubmit:true
+               })
+            }
+        } 
     }
     static navigationOptions = {
         title: 'Menu',
@@ -27,6 +52,11 @@ class Menu extends React.Component {
       };
     service = () => {
         this.props.navigation.navigate('service')
+
+       
+    }
+    notifiaction = () => {
+        this.props.navigation.navigate('Notification')
 
        
     }
@@ -84,7 +114,7 @@ class Menu extends React.Component {
 
     render() {
 
-        const { allUser, list } = this.state
+        const { allUser, list ,serviceSubmit} = this.state
         return (
             <ImageBackground  source= {www} style={{width: '100%', height: '100%'}}>
             <View style={{
@@ -95,9 +125,10 @@ class Menu extends React.Component {
                 alignItems: "center"
             }}>
                   <View style={{ width: 200, height: 80, borderRadius:40  }} >
+                    {!serviceSubmit ?  
                     <Button
                         linearGradientProps={{
-                            colors: ['#403B4A', '#E7E9BB'],
+                            colors: [ '#E7E9BB','#403B4A'],
                             start: { x: 0, y: 0.5 },
                             end: { x: 1, y: 0.5 },
                         }}
@@ -106,11 +137,24 @@ class Menu extends React.Component {
                         large
                         icon={{ name: 'plus', type: 'octicon', }}
                         title='Add Service' />
+                        :
+                        <Button
+                        linearGradientProps={{
+                            colors: [ '#E7E9BB','#403B4A'],
+                            start: { x: 0, y: 0.5 },
+                            end: { x: 1, y: 0.5 },
+                        }}
+                    onPress={this.notifiaction}
+
+                        large
+                        icon={{ name: 'plus', type: 'octicon', }}
+                        title='Notification' />
+                        }
                 </View>
                 <View style={{ width: 200, height: 80, borderRadius:40   }} >
                     <Button
                         linearGradientProps={{
-                            colors: ['#403B4A', '#E7E9BB'],
+                            colors: [ '#E7E9BB','#403B4A'],
                             start: { x: 0, y: 0.5 },
                             end: { x: 1, y: 0.5 },
                         }}
@@ -123,7 +167,7 @@ class Menu extends React.Component {
                 <View style={{ width: 200, height: 80, borderRadius:40    }} >
                     <Button
                         linearGradientProps={{
-                            colors: ['#403B4A', '#E7E9BB'],
+                            colors: [ '#E7E9BB','#403B4A'],
                             start: { x: 0, y: 0.5 },
                             end: { x: 1, y: 0.5 },
                         }}
@@ -138,7 +182,7 @@ class Menu extends React.Component {
                 <View style={{ width: 200, height: 80, borderRadius:40    }} >
                     <Button
                         linearGradientProps={{
-                            colors: ['#403B4A', '#E7E9BB'],
+                            colors: [ '#E7E9BB','#403B4A'],
                             start: { x: 0, y: 0.5 },
                             end: { x: 1, y: 0.5 },
                         }}
@@ -151,7 +195,7 @@ class Menu extends React.Component {
                 <View style={{ width: 200, height: 80, borderRadius:40    }} >
                     <Button
                      linearGradientProps={{
-                        colors: ['#403B4A', '#E7E9BB'],
+                        colors: [ '#E7E9BB','#403B4A'],
                         start: { x: 0, y: 0.5 },
                         end: { x: 1, y: 0.5 },
                     }}
@@ -164,7 +208,7 @@ class Menu extends React.Component {
                 <View style={{ width: 200, height: 80, borderRadius:80    }} >
                     <Button
                         linearGradientProps={{
-                            colors: ['#403B4A', '#E7E9BB'],
+                            colors: [ '#E7E9BB','#403B4A'],
                             start: { x: 0, y: 0.5 },
                             end: { x: 1, y: 0.5 },
                         }}

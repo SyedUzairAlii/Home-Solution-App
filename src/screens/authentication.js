@@ -8,7 +8,7 @@ import * as Expo from 'expo';
 import { Constants } from 'expo';
 import { current_User } from '../Store/actions/authAction'
 import { connect } from 'react-redux';
-
+import { User_Messages } from '../Store/actions/authAction'
 // var provider = new firebase.auth.FacebookAuthProvider();
 class LogIn extends React.Component {
     constructor(props) {
@@ -23,6 +23,8 @@ class LogIn extends React.Component {
         firebase.auth().onAuthStateChanged((user) => {
             if (user != null) {
                 // console.log(user);
+                const userCurrent= user
+                this.props.message(userCurrent)
                 const currentUser = user
                 this.props.user(currentUser)
                 // const resetAction = StackActions.reset({
@@ -38,7 +40,28 @@ class LogIn extends React.Component {
             }
         })
     }
-
+    static navigationOptions = {
+        //  drawerLockMode: 'locked-closed',
+        title: 'Home Solution ',
+        // headerLeft: (
+        // <Icon
+        //   raised
+        //   name='bars'
+        //   type='font-awesome'
+        //   color='#f50'
+        //   onPress= {
+        //     this.props.navigation.navigate('Menu')
+        // }
+        //    />
+        //   ),
+        headerStyle: {
+            backgroundColor: '#075e54',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+    };
     componentWillReceiveProps(props) {
         const { currentUser, allUser } = props;
         if (currentUser) {
@@ -286,6 +309,9 @@ function mapDispatchToProps(dispatch) {
     return ({
         user: (currentUser) => {
             dispatch(current_User(currentUser))
+        },
+        message: (userCurrent) => {
+            dispatch(User_Messages(userCurrent))
         },
         // fb_User: (type, token) => {
         //     dispatch(fb_Action(type, token))

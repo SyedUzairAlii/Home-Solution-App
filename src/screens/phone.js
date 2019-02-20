@@ -7,8 +7,8 @@ import { ImagePicker } from 'expo';
 import { Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input ,Header, Divider } from 'react-native-elements';
-import { Constants } from 'expo';
-import {  Location, Permissions, Contacts } from 'expo';
+import { Constants, Location, Permissions, Contacts } from 'expo';
+
 
 
  class Phone extends React.Component {
@@ -26,7 +26,46 @@ this.setState({
     name:user.name,
     uid:user.UID,
 })
+
+if (!Constants.isDevice) {
+  this.setState({
+      errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+  });
+} else {
+  this._getLocationAsync();
 }
+}
+_getLocationAsync = async () => {
+  const { uid } = this.state
+const {user} = this.props;
+
+
+  console.log("function run ")
+  let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  if (status !== 'granted') {
+      this.setState({
+          errorMessage: 'Permission to access location was denied',
+      });
+      console.log("permission not granted ")
+
+  }
+
+  let location = await Location.getCurrentPositionAsync({});
+  console.log("permission  granted ")
+
+  this.setState({
+      location,
+      where: { lat: location.coords.latitude, lng: location.coords.longitude },
+      get: true
+  });
+  const obj = {
+      Location: { lat: location.coords.latitude, lng: location.coords.longitude }
+  }
+  firebase.database().ref('/UserData/' + user.UID).update(obj);
+
+  // console.log("location===>>>>", location)
+
+};
 submit = () => {
   const{ number, image, uid} = this.state
   if(!(/^(?:\+\d{2})?\d{11}(?:,(?:\+\d{2})?\d{11})*$/.test(number))){
@@ -81,6 +120,11 @@ static navigationOptions = { header: null }
                 <KeyboardAvoidingView behavior="position" enabled>
                 <View style={{ flex: 1, alignItems: 'center',  }}>
                 <Header
+                containerStyle={{
+                  backgroundColor: '#075e54',
+                  justifyContent: 'space-around',
+
+              }}
   // leftComponent={{ icon: 'menu', color: '#fff' }}
   centerComponent={{ text: 'Wellcome'+ " "+name, style: { color: '#fff' } }}
 />

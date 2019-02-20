@@ -7,7 +7,7 @@ import { Input, Header, Divider } from 'react-native-elements';
 import { DrawerActions } from 'react-navigation';
 import { Constants, Location, Permissions, Contacts } from 'expo';
 import { LinearGradient } from 'expo';
-
+import { User_Messages } from '../Store/actions/authAction'
 class Home extends React.Component {
     constructor(props) {
         super(props);
@@ -18,7 +18,8 @@ class Home extends React.Component {
     componentWillMount() {
 
         const { user, allUser } = this.props;
-        // console.log("phone user props", user)
+        
+        console.log("phone user props", user)
         this.setState({
             name: user.name,
             uid: user.UID,
@@ -28,7 +29,14 @@ class Home extends React.Component {
 
     componentDidMount() {
 
-        const { allUser } = this.props;
+        const { user, allUser } = this.props;
+        
+        console.log("phone user props", user)
+        this.setState({
+            name: user.name,
+            uid: user.UID,
+
+        })
         // console.log('alalalalal',allUser)
         var services = [];
         if (allUser) {
@@ -55,21 +63,16 @@ class Home extends React.Component {
 
 
 
-        if (!Constants.isDevice) {
-            this.setState({
-                errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-            });
-        } else {
-            this._getLocationAsync();
-        }
+       
         this.getContacts()
     }
 
     map = () => {
-        this.props.navigation.navigate('Menu')
+        // this.props.navigation.navigate('Menu')
+        this.props.navigation.openDrawer();
     }
-    viewSeller = (i) =>{
-        this.props.navigation.navigate('View',{i} )
+    viewSeller = (i) => {
+        this.props.navigation.navigate('View', { i })
 
     }
     async getContacts() {
@@ -141,13 +144,19 @@ class Home extends React.Component {
         const obj = {
             Location: { lat: location.coords.latitude, lng: location.coords.longitude }
         }
-        firebase.database().ref('/UserData/' + uid).update(obj);
+        // firebase.database().ref('/UserData/' + uid).update(obj);
 
         // console.log("location===>>>>", location)
 
     };
     componentWillReceiveProps(props) {
         const { user, allUser } = props;
+        console.log("phone user props", user)
+        this.setState({
+            name: user.name,
+            uid: user.UID,
+
+        })
         var services = [];
 
         if (allUser) {
@@ -183,7 +192,7 @@ class Home extends React.Component {
                 <Header
 
                     containerStyle={{
-                        backgroundColor: '#6699cc',
+                        backgroundColor: '#075e54',
                         justifyContent: 'space-around',
 
                     }}
@@ -200,34 +209,36 @@ class Home extends React.Component {
                                 {services &&
                                     services.map((i) => {
                                         // console.log(i, "><><><<>")
-                                return(
-                                            <View key={i.category} style={{flexDirection:"row"}} >
-                                                <View style={{ height: 255, width: 170, borderWidth: 2, flex: 1, margin: 10,  borderRadius: 10, }}>
-                                                <LinearGradient
-          colors={['rgba(550,0,10,0.8)', 'transparent']}
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            top: 0,
-            height: 300,
-          }}
-        />
-                                                    <View style={{}}>
+                                        return (
+                                            <View key={i.category} style={{ flexDirection: "row" }} >
+                                                    <LinearGradient
+                                                        colors={['#25d366', 'transparent']}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            left: 0,
+                                                            right: 0,
+                                                            top: 0,
+                                                            height: 300,
+                                                        }}
+                                                    />
+                                                <View style={{ height: 250, width: 160, borderWidth:2, flex: 1, margin: 10, borderRadius:10,borderColor:'#34b7f1' }}>
+                                                    <View style={{borderRadius:10 , overflow:'hidden',height:150,}}>
                                                         <Image style={styles.img} source={{ uri: i.photo }} />
                                                     </View>
+                                                    <TouchableOpacity onPress={() => this.viewSeller(i)}>
                                                     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                                         <Text style={styles.cardTitle}>{i.category}</Text>
                                                     </View>
                                                     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                                         <Text style={styles.titleName}>{i.name}</Text>
                                                     </View>
+                                                </TouchableOpacity>
                                                     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                                        <Text onPress={() => this.viewSeller(i)} style={{ fontSize: 16, color: '#3498db', paddingBottom: 8, paddingTop: 3 }}>VIEW NOW</Text>
+                                                        {/* <Text onPress={() => this.viewSeller(i)} style={{ fontSize: 16, color: '#3498db', paddingBottom: 8, paddingTop: 3 }}>VIEW NOW</Text> */}
                                                     </View>
                                                 </View>
                                             </View>
-                                            )
+                                        )
                                     })
                                 }
 
@@ -250,7 +261,7 @@ const styles = StyleSheet.create({
         width: 165,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius:10
+        borderRadius: 10
     },
     cardTitle: {
         paddingTop: 8,
@@ -278,7 +289,9 @@ function mapStateToProp(state) {
 function mapDispatchToProp(dispatch) {
     return ({
 
-
+        user: (userCurrent) => {
+            dispatch(User_Messages(userCurrent))
+        },
 
     })
 }
