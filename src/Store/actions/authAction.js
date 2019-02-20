@@ -73,6 +73,47 @@ export function current_User(currentUser) {
                 )
             }
         })
+       
+
+
+        // Request
+        var SendRequest = [];
+        var ReceiveRequest = [];
+        firebase.database().ref('/Request/').on('child_added', snapshot => {
+            for (var key in snapshot.val()) {
+                var value = snapshot.val()[key];
+
+                if (value.data.UID === UID) {
+                    // console.log(snapshot.val(), '---==>>');
+                    SendRequest.push(value)
+                }
+                if (snapshot.key === UID) {
+                    ReceiveRequest.push(value)
+                }
+            }
+        })
+
+        // SEND REQUEST
+        dispatch(
+            { type: actionTypes.SENDREQUEST, payload: SendRequest }
+        )
+
+        // RECEIVE REQUEST
+        dispatch(
+            { type: actionTypes.RECEIVEREQUEST, payload: ReceiveRequest }
+        )
+
+    }
+}
+
+//messages
+
+// current User
+export function User_Messages(userCurrent) {
+    return dispatch => {
+        // console.log(userCurrent,'dedux')
+       
+        var arr = [];
         var flag
         var chatMessages = []
         firebase.database().ref('/Messages/').on('child_added', snapShot => {
@@ -80,7 +121,7 @@ export function current_User(currentUser) {
 
             // console.log('ye check karo ',Messages)
             flag = !flag
-            if (Messages.senderUid === currentUser.uid || Messages.reciverUid === currentUID) {
+            if (Messages.senderUid === userCurrent.uid || Messages.reciverUid === userCurrent.uid) {
                 // console.log("user", snapShot.val())
                 chatMessages.push(Messages)
 
@@ -90,10 +131,30 @@ export function current_User(currentUser) {
             }
             dispatch(
                 { type: actionTypes.FLAG, payload: flag }
-            )
+                )
+                
+                
+            })
+            console.log(chatMessages,'dheklo')
+      
+    }}
+
+// export function User_New_Messages(data) {
+//     return dispatch => {
+        
+//             dispatch(
+//                 { type: actionTypes.NEWCHAT, payload: data }
+//             )
 
 
-        })
+// }}
+// export function Delet_Messages() {
+//     return dispatch => {
+        
+//             dispatch(
+//                 { type: actionTypes.DeletChat, payload: null }
+//             )
 
-    }
-}
+
+// }}
+

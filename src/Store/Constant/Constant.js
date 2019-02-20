@@ -3,7 +3,11 @@ const actionTypes = {
     USER: "USER",
     ALLUSER: 'ALLUSER',
     CHAT: "CHAT",
-    FLAG:'FLAG'
+    FLAG:'FLAG',
+    SENDREQUEST:'SENDREQUEST',
+    RECEIVEREQUEST:'RECEIVEREQUEST',
+    NEWCHAT:'NEWCHAT',
+    DeletChat:'DeletChat'
 }
 
 export default actionTypes;

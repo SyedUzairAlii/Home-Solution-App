@@ -5,7 +5,9 @@ const INITIAL_STATE = {
     USER: null,
     ALLUSER: null,
     CHAT: null,
-    FLAG: false
+    FLAG: false,
+    SENDREQUEST:null,
+    RECEIVEREQUEST:null,
 }
 
 export default (states = INITIAL_STATE, action) => {
@@ -30,10 +32,30 @@ export default (states = INITIAL_STATE, action) => {
                 ...states,
                 CHAT: action.payload
             })
+            case 'NEWCHAT':
+            return ({
+                ...states,
+                CHAT: action.payload
+            })
+            case 'DeletChat':
+            return ({
+                ...states,
+                CHAT: action.payload
+            })
         case 'FLAG':
             return ({
                 ...states,
                 FLAG: action.payload
+            })
+            case 'SENDREQUEST':
+            return ({
+                ...states,
+                SENDREQUEST: action.payload
+            })
+            case 'RECEIVEREQUEST':
+            return ({
+                ...states,
+                RECEIVEREQUEST: action.payload
             })
         default:
             return states;
