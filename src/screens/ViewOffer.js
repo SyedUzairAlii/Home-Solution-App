@@ -45,41 +45,67 @@ class ViewOffer extends React.Component {
             if (snapShot.val().data.UID === personUID) {
                 console.log(snapShot.val(), '=====///>>')
                 if (snapShot.val().status === 'Accept') {
-                    // this.setState({ })
+                    this.setState({ oferDay: snapShot.val().WorkingDay,pending:false, offerStatus: snapShot.val().status, offerRate: snapShot.val().rate, firstOffer: true })
                     console.log('accepteed')
                 } else if (snapShot.val().status === 'pending') {
-                    // this.setState({  })
+                    this.setState({ oferDay: snapShot.val().WorkingDay,pending:true, offerStatus: snapShot.val().status, offerRate: snapShot.val().rate, firstOffer: true })
                     console.log('pending')
 
                 }
             }
-           
+
 
         })
         firebase.database().ref('/Request/' + UID).on('child_added', (snapShot) => {
             if (snapShot.val().data.UID === personUID) {
                 console.log(snapShot.val(), '=====///>>')
                 if (snapShot.val().status === 'Accept') {
-                    // this.setState({  })
+                    this.setState({ oferDay: snapShot.val().WorkingDay,pending:false, offerStatus: snapShot.val().status, offerRate: snapShot.val().rate, firstOffer: true })
                     console.log('accepteed')
                 } else if (snapShot.val().status === 'pending') {
-                    // this.setState({ })
+                    this.setState({ oferDay: snapShot.val().WorkingDay,pending:true, offerStatus: snapShot.val().status, offerRate: snapShot.val().rate, firstOffer: true })
                     console.log('pending')
 
                 }
             }
-            
+
         })
-            
+
     }
-    submit = () => {
+    accept = () =>{
+         // const{ experience,category , uid} = this.state
+        //  const { person, currentUser, text } = this.state
+       
+
+         const { person, currentUser, text, day } = this.state
+         // console.log(person,'pesaon')
+         const personUID = person.uid;
+         const me = currentUser
+         const rate = text
+         const weekDay = day
+         const obj = {
+             status: 'Accept',
+             
+         }
+         firebase.database().ref('/Request/' + currentUser.UID).on('value', (snapshot) => {
+             // console.log(snapshot.val())
+             for (var key in snapshot.val()) {
+                 var key12 = key;
+                 var value = snapshot.val()[key12]
+                 console.log(value)
+                 if(value.data.UID === personUID && value.sellerUid === currentUser.UID){
+                     firebase.database().ref('/Request/' + currentUser.UID +'/'+ key12 +'/').update(obj).then(() => {
+                             console.log(value.data.UID)
+                         })
+                 }
+                 // are.push(key12)
+             }
+         })
+    }
+   reject= () => {
         // const{ experience,category , uid} = this.state
-        const { person, currentUser, text } = this.state
-        if (text == null) {
-            alert('Please Set Amount')
-        } else if (!experience) {
-            alert('please tell your Visitng day ')
-        } else {
+        // const { person, currentUser, text } = this.state
+       
 
             const { person, currentUser, text, day } = this.state
             // console.log(person,'pesaon')
@@ -88,19 +114,24 @@ class ViewOffer extends React.Component {
             const rate = text
             const weekDay = day
             const obj = {
-                status: 'Pending',
-                data: me,
-                rate: rate,
-                WorkingDay: weekDay,
-                sellerUid: personUID,
+                status: 'Reject',
+                
             }
-            firebase.database().ref('/Request/' + personUID).push(obj).then(() => {
-                this.setState({
-                    Status: true,
-
-                })
+            firebase.database().ref('/Request/' + currentUser.UID).on('value', (snapshot) => {
+                // console.log(snapshot.val())
+                for (var key in snapshot.val()) {
+                    var key12 = key;
+                    var value = snapshot.val()[key12]
+                    console.log(value)
+                    if(value.data.UID === personUID && value.sellerUid === currentUser.UID){
+                        firebase.database().ref('/Request/' + currentUser.UID +'/'+ key12 +'/').update(obj).then(() => {
+                                console.log(value.data.UID)
+                            })
+                    }
+                    // are.push(key12)
+                }
             })
-        }
+        
     }
 
     render() {
@@ -124,7 +155,7 @@ class ViewOffer extends React.Component {
         ];
 
 
-        const { allUser, list, category, experience, text, } = this.state
+        const { pending, list, category, experience, text, firstOffer,oferDay,offerStatus,offerRate} = this.state
         return (
             <ImageBackground source={www} style={{ width: '100%', height: '100%' }}>
                 <View style={{
@@ -134,20 +165,47 @@ class ViewOffer extends React.Component {
                     // justifyContent: 'center',
                     alignItems: "center"
                 }}>
+                    <View>
+                        <Text style={{ fontSize: 25, fontWeight: "bold", color: '#f2f2f2' }}>{offerStatus}</Text>
 
-                       
+                        <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Rate</Text> {offerRate} PKR</Text>
+                        <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Week-Day: </Text>{oferDay}</Text>
 
-                   
-                   
-                   
-                       <View>
-                            <Text style={{ fontSize: 25, fontWeight: "bold", color: '#f2f2f2' }}>{}</Text>
+                    </View>
+{
+    pending &&
+    <View style={{ marginTop: 70, paddingLeft: 5, paddingTop: 30, flexDirection: 'row', paddingBottom: 10, paddingRight: 5 }}>
 
-                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Rate</Text> Pkr</Text>
-                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Week-Day: </Text>{}</Text>
 
-                       </View>
-                 </View>
+    <View style={{ width: '50%', paddingRight: 2 }}>
+        <Button
+            linearGradientProps={{
+                colors: ['#4c669f', '#3b5998', '#192f6a'],
+                start: { x: 0, y: 0.5 },
+                end: { x: 1, y: 0.5 },
+            }}
+            onPress={this.accept}
+
+            // large
+            title='Accept' />
+    </View>
+
+        <View style={{ width: '50%', paddingLeft: 2 }}>
+            <Button
+                linearGradientProps={{
+                    colors: ['#4c669f', '#3b5998', '#192f6a'],
+                    start: { x: 0, y: 0.5 },
+                    end: { x: 1, y: 0.5 },
+                }}
+                onPress={() => this.reject}
+
+                // large
+                title='Reject' />
+        </View>
+        </View>
+
+}
+                </View>
 
             </ImageBackground>
         );

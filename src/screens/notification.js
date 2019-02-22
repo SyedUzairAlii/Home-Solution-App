@@ -189,15 +189,17 @@ class Home extends React.Component {
                                         photo: a.reciver.photo,
                                         category: a.reciver.category,
                                         experience: a.reciver.experience,
-                                        image: a.reciver.image
+                                        image: a.reciver.image,
+                                        Location: a.reciver.Location
+
                                     }
                                     var i = obj
                                     return (
                                         <TouchableOpacity onPress={() => this.viewSeller(i)}>
-                                            <View style={{ paddingLeft: 3, paddingTop: 20, marginLeft: 5, flexDirection: 'row' }}>
-                                                <View>
+                                            <View style={{ paddingLeft: 10, paddingTop: 20,  flexDirection: 'row',borderWidth:2,borderColor: '#075e54' }}>
+                                                <View >
                                                     <Avatar
-                                                        size="small"
+                                                        size="medium"
                                                         rounded
                                                         title="CR"
                                                         // onPress={() => this.pickImage}
@@ -208,8 +210,8 @@ class Home extends React.Component {
                                                         }}
                                                     />
                                                 </View>
-                                                <View>
-                                                    <Text style={{ fontSize: 16, fontWeight: "bold", color: '#f2f2f2', paddingLeft: 5 }}> {i.name}</Text>
+                                                <View style={{ marginLeft: 10, }}>
+                                                    <Text style={{ fontSize: 20, fontWeight: "bold", color: '#f2f2f2', paddingLeft: 5 }}> {i.name}</Text>
                                                 </View>
                                             </View>
                                         </TouchableOpacity>
@@ -223,16 +225,17 @@ class Home extends React.Component {
                                         photo: a.sender.photo,
                                         category: a.sender.category,
                                         experience: a.sender.experience,
-                                        image: a.sender.image
+                                        image: a.sender.image,
+                                        Location: a.sender.Location
                                     }
                                     var i = obj
                                     return (
-                                        <View style={{ paddingLeft: 3, paddingTop: 20, marginLeft: 5, flexDirection: 'row' }}>
-                                            <TouchableOpacity onPress={() => this.viewBuyer(i)}>
+                                        <TouchableOpacity onPress={() => this.viewBuyer(i)}>
+                                        <View style={{ paddingLeft: 10, paddingTop: 20,  flexDirection:'row',borderWidth:2,borderColor: '#075e54' }}>
 
-                                                <View>
+                                                <View style={{marginRight:10, }}>
                                                     <Avatar
-                                                        size="small"
+                                                        size="medium"
                                                         rounded
                                                         title="CR"
                                                         // onPress={() => this.pickImage}
@@ -244,13 +247,13 @@ class Home extends React.Component {
 
                                                     />
                                                 </View>
-                                                <View>
+                                                <View style={{  borderWidth:2}}>
 
-                                                    <Text style={{ fontSize: 16, fontWeight: "bold", color: '#f2f2f2', paddingLeft: 5 }}> {i.name}</Text>
+                                                    <Text style={{ fontSize: 20, fontWeight: "bold", color: '#f2f2f2', paddingLeft: 5,  }}> {i.name}</Text>
                                                 </View>
+                                        </View>
                                             </TouchableOpacity>
 
-                                        </View>
 
                                     )
                                 }

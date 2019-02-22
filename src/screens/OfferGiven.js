@@ -108,12 +108,58 @@ class OfferGiven extends React.Component {
                 WorkingDay: weekDay,
                 sellerUid: personUID,
             }
+            
             firebase.database().ref('/Request/' + personUID).push(obj).then(() => {
                 this.setState({
                     Status: true,
 
                 })
             })
+        }
+    }
+
+    Update= () => {
+        // const{ experience,category , uid} = this.state
+        const { person, currentUser, text ,day} = this.state
+        if (text == null) {
+            alert('Please Set Amount')
+        } else if (!day) {
+            alert('please tell your Visitng day ')
+        } else {
+
+            const { person, currentUser, text, day } = this.state
+            // console.log(person,'pesaon')
+            const personUID = person.uid;
+            const me = currentUser
+            const rate = text
+            const weekDay = day
+            const obj = {
+                
+                
+                rate: rate,
+                WorkingDay: weekDay,
+                
+            }
+            firebase.database().ref('/Request/' + personUID).on('value', (snapshot) => {
+                // console.log(snapshot.val())
+                for (var key in snapshot.val()) {
+                    var key12 = key;
+                    var value = snapshot.val()[key12]
+                    console.log(value)
+                    if(value.data.UID === me.UID && value.sellerUid === personUID){
+                        firebase.database().ref('/Request/' + personUID +'/'+ key12 +'/').update(obj).then(() => {
+                                console.log(value.data.UID)
+                            })
+                    }
+                    // are.push(key12)
+                }
+            })
+            // firebase.database().ref('/Request/' + personUID).push(obj).then(() => {
+            //     this.setState({
+            //         Status: true,
+
+            //     })
+            // })
         }
     }
 
@@ -138,7 +184,7 @@ class OfferGiven extends React.Component {
         ];
 
 
-        const { allUser, list, category, experience, text,status,firstOffer} = this.state
+        const { allUser, list, category, experience, text,status,firstOffer,oferDay,offerStatus,offerRate} = this.state
         return (
             <ImageBackground source={www} style={{ width: '100%', height: '100%' }}>
                 <View style={{
@@ -205,7 +251,7 @@ class OfferGiven extends React.Component {
                                 start: { x: 0, y: 0.5 },
                                 end: { x: 1, y: 0.5 },
                             }}
-                            onPress={this.submit}
+                            onPress={this.Update}
 
                             large
                             title='Update Offer' />}
@@ -216,10 +262,10 @@ class OfferGiven extends React.Component {
                    {
                        firstOffer && 
                        <View>
-                            <Text style={{ fontSize: 25, fontWeight: "bold", color: '#f2f2f2' }}></Text>
+                            <Text style={{ fontSize: 25, fontWeight: "bold", color: '#f2f2f2' }}>{offerStatus}</Text>
 
-                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Rate</Text> Pkr</Text>
-                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Week-Day: </Text>pk</Text>
+                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Rate</Text> {offerRate} PKR</Text>
+                            <Text style={{ fontSize: 22, color: '#f2f2f2' }}><Text style={{ fontSize: 19, color: '#F3F9A7' }}>Week-Day: </Text>{oferDay}</Text>
 
                        </View> 
                     } 

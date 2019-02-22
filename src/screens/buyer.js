@@ -127,6 +127,10 @@ giveOffer = (person) =>{
     //     })
 
     // }
+    direction(userLocation){
+        this.props.navigation.navigate('map' , {userLocation})
+
+    }
     chat = () =>{
         const{person} = this.state
         const receverDetails = person
@@ -237,7 +241,8 @@ giveOffer = (person) =>{
                                     start: { x: 0, y: 0.5 },
                                     end: { x: 1, y: 0.5 },
                                 }}
-                                // onPress={this.request}
+                                onPress={() => this.direction(userLocation=person.Location)}
+
 
                                 // large
                                 title='Get Direction' />

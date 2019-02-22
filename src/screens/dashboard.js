@@ -84,7 +84,7 @@ class Home extends React.Component {
 
 
 
-
+        this.mycontant()
         this.getContacts()
     }
     async getDistance(users, userData) {
@@ -126,29 +126,52 @@ class Home extends React.Component {
             var phoneContact = [];
             console.log(contact, '<<><><><')
             setTimeout(() => {
-                const objj = {
-                    phoneContacts: phoneContact
-                }
-                // console.log(objj)
-                // firebase.database().ref('/UserData/' + uid).update(objj);
+                this.setState({
+                    Mycontact: phoneNumber
+                })
+                console.log(phoneNumber,'>>>>>>>??????>>>')
             }, 100)
+            phoneNumber = []
             data.map((i) => {
                 const name = i.name;
+                // console.log('contactArray>>>>>>>>>>>>>>',i);
                 i.phoneNumbers.map((n) => {
-                    // console.log('contactArray>>>>>>>>>>>>>>',n.number);
 
-                    const obj = {
-                        name: name,
-                        number: n.number
-                    }
+
+                    phoneNumber.push(n.number)
+
                     // console.log(obj,'<<><><><')
-                    phoneContact.push({ obj })
+                    // phoneContact.push({ obj })
                 })
             })
+            
+            
 
 
         }
 
+    }
+
+    mycontant = () => {
+        const { Mycontact, services } = this.state
+        setTimeout(()=>{
+
+            console.log(Mycontact,services,',l,l,l,l,,l,l,,,l,,l')
+            match = []
+            if (Mycontact) {
+            console.log(Mycontact, 'millgye')
+            if (services) {
+                services.map((i) => {
+                    Mycontact.map((c) => {
+                        if(i.number === c){
+                            match.push(i)
+                        }
+                    })
+                })
+            }
+            console.log(match,'match')
+        }
+    },15000)
     }
     _getLocationAsync = async () => {
         const { uid } = this.state
